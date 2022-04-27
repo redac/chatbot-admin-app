@@ -1,6 +1,6 @@
-## Chatbot App
+# Chatbot Administration App
 
-This is a chatbot management web app, it allows users to:
+This is a chatbot administration web app, it allows users to:
 
 - CRUD(Create, Read, Update, Delete) rivescript chatbots.
 - Allow the user to choose an interface to communicate with the said bots.
@@ -15,7 +15,7 @@ You can see a hosted version of `The node.js example app` on <a href="#" target=
 
 ## App setup
 
-### Clone the repo and install the dependencies.
+### Clone the repo and install the dependencies
 
 ```bash
 git clone https://github.com/redac/chatbot-monorepo.git
@@ -26,7 +26,7 @@ cd chatbot-monorepo
 npm install
 ```
 
-### Launch the app in dev mode.
+### Launch the app in dev mode
 
 To start the app (front and back), run the following :
 
@@ -36,7 +36,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) and take a look around.
 
-### Launch the front/back end in dev mode.
+### Launch the front/back end in dev mode
 
 To start a specific part of the app (e.g.frontend), run the following :
 
@@ -49,3 +49,8 @@ npm run front-dev # or npm run back-dev
 You can also deploy this app to Vercel:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fredac%2Fchatbot-monorepo)
+
+# Contributors
+
+- Reda Khermach ([@redac](https://github.com/redac))
+- Kellian Germain ([@HidaYoritomo](https://github.com/HidaYoritomo))

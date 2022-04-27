@@ -15,7 +15,7 @@ function App() {
       display="grid"
     >
       <Text h1 css={{ fontFamily: 'Space Grotesk' }}>
-        Welcome to the Chatbot Management App
+        Chatbot Administration App
       </Text>
       <Grid.Container gap={2} css={{ width: 'fit-content' }}>
         <Grid>
