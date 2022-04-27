@@ -4,7 +4,10 @@
   "description": "Chatbot management web app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "front-dev": "cd ui/ && npm run dev",
+    "back-dev": "cd server && nodemon run",
+    "dev": "concurrently npm:*-dev"
   },
   "author": "KHERMACH Reda, GERMAIN Kellian",
   "license": "ISC",

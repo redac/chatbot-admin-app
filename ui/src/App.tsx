@@ -15,7 +15,7 @@ function App() {
       display="grid"
     >
       <Text h1 css={{ fontFamily: 'Space Grotesk' }}>
-        Welcome to the Chatbot
+        Welcome to the Chatbot Management App
       </Text>
       <Grid.Container gap={2} css={{ width: 'fit-content' }}>
         <Grid>
@@ -25,7 +25,8 @@ function App() {
         </Grid>
         <Grid>
           <Button
-            shadow color="gradient"
+            shadow
+            color="gradient"
             onClick={() => navigate('/playground')}
           >
             Playground
