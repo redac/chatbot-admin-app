@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+  <title>Administration</title>
+  <link rel="stylesheet" type="text/css" href="css/admin.css">
+</head>
+
+<body>
+  <div>
+    Créer un chatbot :
+    <form action="javascript:addChatbot()" method="post">
+      <input type="text" name="name" id="name" placeholder="Steeve">
+      <button type="submit">Créer</button>
+    </form>
+  </div>
+
+  <!-- Chatbots Table Div -->
+  <div id="table_div">
+    Chatbots : (Cliquez sur une ligne pour modifier un chatbot)
+  </div>
+
+  <!-- The Modal -->
+  <div id="modal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="form_container">
+        <form action="javascript:updateChatBot()" method="post">
+          <label>Id</label>
+          <input id="id_modal" disabled=true> <br>
+          <label>Name</label>
+          <input id="name_modal" disabled=true> <br>
+          <label>Cerveau</label>
+          <select id="cerveau_modal"> </select> <br>
+          <label>Url</label>
+          <input id="url_modal" disabled=true> <br>
+          <label> Web </label>
+          <input type="checkbox" name="group_service" id="web_modal" onclick='handleRadioClick();'> <br>
+          <label> Mastodon </label>
+          <input type="checkbox" name="group_service" id="mastodon_modal" onclick='handleRadioClick();'> <br>
+          <div id="mastodon_info" style="display: none">
+            <label>Mastodon url</label>
+            <input id="mastodon_url_modal" value="https://botsin.space"> <br>
+            <label>Access token</label>
+            <input id="access_token_modal"> <br>
+          </div>
+          <label> Discord </label>
+          <input type="checkbox" name="group_service" id="discord_modal" onclick='handleRadioClick();' disabled=true>
+          <br>
+          <button type="submit">Valider</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+<script>
+  let id_modal = document.getElementById("id_modal")
+  let modal = document.getElementById("modal")
+  let name_modal = document.getElementById("name_modal")
+  let cerveau_modal = document.getElementById("cerveau_modal")
+  let url_modal = document.getElementById("url_modal")
+  let web_modal = document.getElementById("web_modal")
+  let mastodon_modal = document.getElementById("mastodon_modal")
+  let access_token_modal = document.getElementById("access_token_modal")
+  let mastodon_url_modal = document.getElementById("mastodon_url_modal")
+  let discord_modal = document.getElementById("discord_modal")
+  let brains = []
+
+  $.get("api/brains", function (data, status) {
+    brains = data
+  })
+
+  function updateChatbotTable() {
+    let table = document.getElementById("table")
+    if (table != null)
+      document.getElementById("table_div").removeChild(table)
+    $.get("api/chatbots", function (data, status) {
+      let chatbots = Object.values(data)
+      createChatbotTable(chatbots)
+    })
+  }
+
+  function createChatbotTable(chatbots) {
+    let table = document.createElement('table')
+    table.id = "table"
+    table.style.border = '1px solid black'
+    let tr = table.insertRow()
+    for (let property in chatbots[0]) {
+      let td = tr.insertCell()
+      td.appendChild(document.createTextNode(property))
+    }
+    for (let i = 0; i < chatbots.length; i++) {
+      let tr = table.insertRow()
+      tr.onclick = function () {
+        openModal(chatbots[i])
+      }
+      for (let property in chatbots[i]) {
+        let td = tr.insertCell()
+        td.appendChild(document.createTextNode(chatbots[i][property]))
+      }
+    }
+    document.getElementById("table_div").appendChild(table);
+  }
+
+  // Handles mastodon info visibility when service mode is selected
+  function handleRadioClick() {
+    let mastodon_info = document.getElementById("mastodon_info");
+    mastodon_info.style.display = mastodon_modal.checked ? "block" : "none";
+  }
+
+  function addChatbot() {
+    let name = document.getElementById("name").value
+    $.post("api/chatbots", {
+      name: name
+    }, function (data, status) {
+      updateChatbotTable()
+    })
+  }
+
+  function openModal(chatbot) {
+    id_modal.value = chatbot.id
+    name_modal.value = chatbot.name
+    url_modal.value = chatbot.url
+    // Removes all options
+    while (cerveau_modal.firstChild)
+      cerveau_modal.removeChild(cerveau_modal.firstChild);
+    // Adds new options
+    for (cerveau of brains) {
+      let option = document.createElement("option")
+      option.text = cerveau
+      option.selected = (chatbot.cerveau == cerveau)
+      cerveau_modal.appendChild(option)
+    }
+    web_modal.checked = (chatbot.web == "on")
+    mastodon_modal.checked = (chatbot.mastodon == "on")
+    discord_modal.checked = (chatbot.discord == "on")
+
+    // Opens the modal
+    modal.style.display = "block";
+
+    // Update form 
+    handleRadioClick();
+  }
+
+  function updateChatBot() {
+    let id = id_modal.value
+    let cerveau = cerveau_modal.options[cerveau_modal.selectedIndex].value
+    let web = web_modal.checked ? "on" : "off"
+    let mastodon = mastodon_modal.checked ? "on" : "off"
+    let params = {
+      cerveau: cerveau,
+      web: web,
+      mastodon: mastodon,
+    }
+    if (mastodon) {
+      params.mastodon_url = $.trim(mastodon_url_modal.value)
+      params.access_token = $.trim(access_token_modal.value)
+    }
+    $.post("api/chatbots/" + id, params, function (data, status) {
+      modal.style.display = "none"
+      updateChatbotTable()
+    })
+  }
+
+  function setupModal() {
+    // Get the modal
+    var modal = document.getElementById("modal");
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+      modal.style.display = "none";
+    }
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  }
+
+  setupModal()
+  updateChatbotTable()
+</script>
+
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "chatbot-monorepo",
+  "version": "1.0.0",
+  "description": "Chatbot management web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "KHERMACH Reda, GERMAIN Kellian",
+  "license": "ISC",
+  "workspaces": [
+    "server",
+    "ui"
+  ],
+  "dependencies": {
+    "concurrently": "^7.1.0"
+  }
+}
