@@ -11,7 +11,7 @@ You can see a hosted version of `The node.js example app` on <a href="#" target=
 
 ## Requirements
 
-- Node 8
+- Node 16
 
 ## App setup
 

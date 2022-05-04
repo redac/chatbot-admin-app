@@ -12,7 +12,7 @@ const router = express.Router();
 let chatbots = (global.chatbots = {});
 let brains = (global.brains = []);
 let interfaces = (global.interfaces = ['Web', 'Mastodon', 'Discord']);
-chatbots.next_id = 0;
+chatbots.nextID = 0;
 
 // Stores rive files name
 fs.readdir('src/public/brains', (_err, files) => {
@@ -26,7 +26,7 @@ function loading_error(err, _filename, _lineno) {
 }
 
 function createChatbot(botName) {
-  let id = chatbots.next_id++;
+  let id = chatbots.nextID++;
   let bot = {
     info: {
       id: id,
