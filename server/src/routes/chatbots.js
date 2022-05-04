@@ -25,23 +25,23 @@ function loading_error(err, _filename, _lineno) {
   console.log('Error when loading files: ' + err);
 }
 
-function createChatbot(name) {
+function createChatbot(botName) {
   let id = chatbots.next_id++;
   let bot = {
-    rive: null,
-    web: null,
-    mastodon: null,
-    mastodon_handler: null,
-    discord: null,
     info: {
       id: id,
-      name: name,
+      name: botName,
       brain: null,
       url: 'http://localhost:' + (BASE_BOT_PORT + id),
       web: 'off',
       mastodon: 'off',
       discord: 'off',
     },
+    rive: null,
+    web: null,
+    mastodon: null,
+    mastodon_handler: null,
+    discord: null,
   };
   chatbots[id] = bot;
   return id;
@@ -144,30 +144,49 @@ function botService(id) {
   chatbots[id].info.web = 'on';
 }
 
+/**
+ * GET
+ * /api/chatbots
+ * Get all bots
+ *  */
 router.get('/', (_req, res) => {
   res.json(Object.values(chatbots).map((x) => x.info));
 });
 
+/**
+ * POST /api/chatbots
+ * Create a bot
+ */
 router.post('/', (req, res) => {
-  let name = req.body.name !== '' ? req.body.name : 'Steeve';
+  let name = req.body.name !== '' ? req.body.name : 'Steve';
   var id = createChatbot(name);
   addBrain(id, 'rs-standard');
   botService(id);
-  notif(res, 'bot created (id:' + id + ')');
+  notify(res, 'bot created (id:' + id + ')');
 });
 
-router.post('/:id', (req, res) => {
+/**
+ * Modifies a chatbot
+ */
+router.patch('/:id', (req, res) => {
   let modified = [];
   let id = parseInt(req.params.id);
   if (chatbots[id] === undefined) res.send("chatbot '" + id + "' not found");
   console.log(id, chatbots[id].info);
+  // Modify name
+  if (req.body.name) {
+    chatbots[id].info.name = req.body.name;
+    modified.push('Name :' + req.body.name);
+  }
+  // Modify brain
   if (
     req.body.brain !== undefined &&
     chatbots[id].info.brain !== req.body.brain
   ) {
     addBrain(id, req.body.brain);
-    modified.push('Brain:' + req.body.brain);
+    modified.push('Brain :' + req.body.brain);
   }
+  // Modify web interface
   if (req.body.web && req.body.web !== chatbots[id].info.web) {
     if (req.body.web == 'off') {
       chatbots[id].info.web = 'off';
@@ -176,8 +195,9 @@ router.post('/:id', (req, res) => {
     } else {
       botService(id);
     }
-    modified.push('web: ' + req.body.web);
+    modified.push('Web service: ' + req.body.web);
   }
+  // Modify mastodon interface
   if (req.body.mastodon && req.body.mastodon !== chatbots[id].info.mastodon) {
     serviceMastodon(
       id,
@@ -185,28 +205,48 @@ router.post('/:id', (req, res) => {
       req.body.access_token,
       req.body.mastodon_url
     );
-    modified.push('mastodon: ' + req.body.mastodon);
+    modified.push('Mastodon service: ' + req.body.mastodon);
   }
 
-  notif(res, "bot '" + id + "' modified (" + modified.join(',') + ')');
+  notify(res, "bot '" + id + "' modified (" + modified.join(',') + ')');
 });
 
-function notif(res, message) {
-  res.send(
-    JSON.stringify({
-      type: 'notif',
-      message: message,
-    })
-  );
-}
+/**
+ * Deletes a chatbot
+ */
+router.delete('/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  if (chatbots[id] === undefined) res.send("chatbot '" + id + "' not found");
+  else {
+    delete chatbots[id];
+    console.log(chatbots[id]);
+    notify(res, "bot '" + id + "' deleted ");
+  }
+});
 
+// Utility functions
+
+/**
+ * Send a notification message
+ * @param {*} res
+ * @param {*} message
+ */
+function notify(res, message) {
+  res.json({
+    type: 'notification',
+    message: message,
+  });
+}
+/**
+ * Send an error message
+ * @param {*} res
+ * @param {*} message
+ */
 function error(res, message) {
-  res.send(
-    JSON.stringify({
-      type: 'error',
-      message: message,
-    })
-  );
+  res.json({
+    type: 'error',
+    message: message,
+  });
 }
 
 module.exports = router;
