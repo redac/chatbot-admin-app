@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Bot {
+  bot_id    Int      @id @default(autoincrement())
+  name      String   @default("Steve")
+  brain     String   @default("rs-standard")
+  web       Boolean  @default(true)
+  discord   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

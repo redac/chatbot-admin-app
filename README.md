@@ -1,32 +1,43 @@
-# Chatbot Administration App
+# Chatbot Administration CRUD App
 
 This is a chatbot administration web app, it allows users to:
 
-- CRUD(Create, Read, Update, Delete) rivescript chatbots.
+- **C**reate, **R**ead, **U**pdate and **D**elete rivescript chatbots.
 - Allow the user to choose an interface to communicate with the said bots.
 
-<a href="#" target="_blank"><img src="https://cdn.discordapp.com/attachments/510096241288413184/968813650804613130/Screenshot_2022-04-27_at_11.59.02.png" alt="Screenshot of the example app"/></a>
+<a href="#" target="_blank"><img src="https://i.imgur.com/Be0l2O0.png" alt="Screenshot of the example app"/></a>
 
-You can see a hosted version of `The node.js example app` on <a href="#" target="_blank">Vercel</a>.
+Tech stack:
 
-## Requirements
+- Backend: [Express](https://expressjs.com/), [Prisma ORM](https://www.prisma.io/express)
+- Frontend: [React](https://reactjs.org/), [TailwindCSS](https://tailwindcss.com/)
 
-- Node 16
+You can see a hosted version of application on <a href="#" target="_blank">Vercel</a>.
 
-## App setup
+## Getting started
 
-### Clone the repo and install the dependencies
+### 1. Clone the repo and install the dependencies
 
+Clone this repo:
 ```bash
-git clone https://github.com/redac/chatbot-monorepo.git
-cd chatbot-monorepo
+git clone https://github.com/redac/chatbot-admin-app
+cd chatbot-admin-app
 ```
 
+Instal lnpm dependencies:
 ```bash
 npm install
 ```
 
-### Launch the app in dev mode
+### 2. Initialize the database
+
+Run the following command to create your SQLite database file. This also creates the `Bot` table that is defined in [`prisma/schema.prisma`](./server/prisma/schema.prisma):
+
+```
+npx prisma migrate dev --name init
+```
+
+### 3. Launch the application
 
 To start the app (front and back), run the following :
 
@@ -44,13 +55,32 @@ To start a specific part of the app (e.g.frontend), run the following :
 npm run front-dev # or npm run back-dev
 ```
 
-## Deploy to Vercel
+## Using the REST API
 
-You can also deploy this app to Vercel:
+You can access the REST API of the server at `http://localhost:3030` using the following endpoints:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fredac%2Fchatbot-monorepo)
+### `GET`
 
-# Contributors
+- `/api/chatbots/:id`: Fetch a single chatbot by its `id`
+- `/api/chatbots`: Fetch all chatbots
+- `/api/brains`: Fetch all currently loadable rivescript brains
+- `/api/interfaces`: Fetch all the currently supported interfaces
 
-- Reda Khermach ([@redac](https://github.com/redac))
-- Kellian Germain ([@HidaYoritomo](https://github.com/HidaYoritomo))
+### `POST`
+
+- `/api/chatbots/`: Create a new chatbot
+  - Body:
+    - `name: String` (default: Steve): The name of the chatbot
+
+### `PATCH`
+
+- `/api/chatbots/:id`: Modify a given chatbot
+  - Body:
+    - `name: String` : The new name of the chatbot
+    - `brain: String` : The filename of the chatbot's new brain (the file has to be in the [`public/brains`](./server/src/public/brains/) folder)
+    - `web: Boolean` : The state of the bot's web interface
+    - `discord: Boolean` : The state of the bot's discord interface
+
+### `DELETE`
+
+- `/api/chatbots/:id`: Delete a chatbot by its `id`

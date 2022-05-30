@@ -10,17 +10,26 @@
 </head>
 
 <body>
+  <div style="
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 3px solid lightblue;
+  margin: 10vh;
+  padding: 25vh;">
   <div>
-    Créer un chatbot :
+    Create a chatbot:
     <form action="javascript:addChatbot()" method="post">
-      <input type="text" name="name" id="name" placeholder="Steeve">
-      <button type="submit">Créer</button>
+      <input type="text" name="name" id="name" placeholder="Alexa">
+      <button type="submit">Create</button>
     </form>
   </div>
 
   <!-- Chatbots Table Div -->
-  <div id="table_div">
-    Chatbots : (Cliquez sur une ligne pour modifier un chatbot)
+  <div style="padding: 0.5rem;" id="table_div">
+    <p>Click a chatbot to modify it</p>
   </div>
 
   <!-- The Modal -->
@@ -30,31 +39,25 @@
       <span class="close">&times;</span>
       <div class="form_container">
         <form action="javascript:updateChatBot()" method="post">
-          <label>Id</label>
+          <label>ID</label>
           <input id="id_modal" disabled=true> <br>
           <label>Name</label>
           <input id="name_modal" disabled=true> <br>
-          <label>Cerveau</label>
-          <select id="cerveau_modal"> </select> <br>
-          <label>Url</label>
+          <label>Brain</label>
+          <select id="brain_modal"> </select> <br>
+          <label>URL</label>
           <input id="url_modal" disabled=true> <br>
-          <label> Web </label>
-          <input type="checkbox" name="group_service" id="web_modal" onclick='handleRadioClick();'> <br>
-          <label> Mastodon </label>
-          <input type="checkbox" name="group_service" id="mastodon_modal" onclick='handleRadioClick();'> <br>
-          <div id="mastodon_info" style="display: none">
-            <label>Mastodon url</label>
-            <input id="mastodon_url_modal" value="https://botsin.space"> <br>
-            <label>Access token</label>
-            <input id="access_token_modal"> <br>
+          <label>Web interface</label>
+          <input type="checkbox" name="group_service" id="web_modal" onclick=''> <br>
           </div>
           <label> Discord </label>
-          <input type="checkbox" name="group_service" id="discord_modal" onclick='handleRadioClick();' disabled=true>
+          <input type="checkbox" name="group_service" id="discord_modal" onclick='' disabled=true>
           <br>
-          <button type="submit">Valider</button>
+          <button style="align-items: flex-end;" type="submit">Submit</button>
         </form>
       </div>
     </div>
+  </div>
   </div>
 
 </body>
@@ -63,7 +66,7 @@
   let id_modal = document.getElementById("id_modal")
   let modal = document.getElementById("modal")
   let name_modal = document.getElementById("name_modal")
-  let cerveau_modal = document.getElementById("cerveau_modal")
+  let brain_modal = document.getElementById("brain_modal")
   let url_modal = document.getElementById("url_modal")
   let web_modal = document.getElementById("web_modal")
   let mastodon_modal = document.getElementById("mastodon_modal")
@@ -108,12 +111,6 @@
     document.getElementById("table_div").appendChild(table);
   }
 
-  // Handles mastodon info visibility when service mode is selected
-  function handleRadioClick() {
-    let mastodon_info = document.getElementById("mastodon_info");
-    mastodon_info.style.display = mastodon_modal.checked ? "block" : "none";
-  }
-
   function addChatbot() {
     let name = document.getElementById("name").value
     $.post("api/chatbots", {
@@ -124,43 +121,34 @@
   }
 
   function openModal(chatbot) {
-    id_modal.value = chatbot.id
+    id_modal.value = chatbot.bot_id
     name_modal.value = chatbot.name
     url_modal.value = chatbot.url
     // Removes all options
-    while (cerveau_modal.firstChild)
-      cerveau_modal.removeChild(cerveau_modal.firstChild);
+    while (brain_modal.firstChild)
+      brain_modal.removeChild(brain_modal.firstChild);
     // Adds new options
-    for (cerveau of brains) {
+    for (brain of brains) {
       let option = document.createElement("option")
-      option.text = cerveau
-      option.selected = (chatbot.cerveau == cerveau)
-      cerveau_modal.appendChild(option)
+      option.text = brain
+      option.selected = (chatbot.brain == brain)
+      brain_modal.appendChild(option)
     }
-    web_modal.checked = (chatbot.web == "on")
-    mastodon_modal.checked = (chatbot.mastodon == "on")
-    discord_modal.checked = (chatbot.discord == "on")
+    web_modal.checked = (chatbot.web == true)
+    discord_modal.checked = (chatbot.discord == true)
 
     // Opens the modal
     modal.style.display = "block";
 
-    // Update form 
-    handleRadioClick();
   }
 
   function updateChatBot() {
     let id = id_modal.value
-    let cerveau = cerveau_modal.options[cerveau_modal.selectedIndex].value
+    let cerveau = brain_modal.options[brain_modal.selectedIndex].value
     let web = web_modal.checked ? "on" : "off"
-    let mastodon = mastodon_modal.checked ? "on" : "off"
     let params = {
       cerveau: cerveau,
       web: web,
-      mastodon: mastodon,
-    }
-    if (mastodon) {
-      params.mastodon_url = $.trim(mastodon_url_modal.value)
-      params.access_token = $.trim(access_token_modal.value)
     }
     $.post("api/chatbots/" + id, params, function (data, status) {
       modal.style.display = "none"

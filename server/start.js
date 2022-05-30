@@ -1,7 +1,13 @@
 require('dotenv').config();
 
 const app = require('./appAdmin');
+const { syncChatbotsOnInit } = require('./src/utils/db');
 
-const server = app.listen(3030, () => {
-  console.log(`Main server is running on port ${server.address().port}`);
-});
+async function startServer() {
+  await syncChatbotsOnInit();
+  app.listen(3030, async () => {
+    console.log(`Main API server is running on port ${3030} 🚀`);
+  });
+}
+
+startServer();

@@ -1,21 +1,22 @@
 {
-  "name": "chatbot-monorepo",
+  "name": "chatbot-app",
   "version": "1.0.0",
-  "description": "Chatbot management web app",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "front-dev": "cd ui/ && npm run dev",
-    "back-dev": "cd server && nodemon run",
-    "dev": "concurrently npm:*-dev"
+    "front-dev": "npm run dev --workspace=ui",
+    "back-dev": "npm run watch --workspace=server",
+    "dev": "concurrently npm:*-dev",
+    "debug": "nodemon --inspect server/start.js"
   },
-  "author": "KHERMACH Reda, GERMAIN Kellian",
+  "author": "",
   "license": "ISC",
   "workspaces": [
-    "server",
-    "ui"
+    "./server",
+    "./ui"
   ],
-  "dependencies": {
-    "concurrently": "^7.1.0"
+  "devDependencies": {
+    "concurrently": "^7.2.0"
   }
 }

@@ -1,20 +1,20 @@
-import { Button, Col, Container, Grid, Input, Row } from "@nextui-org/react";
-import { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import { createChatBot } from "../api/chatbot";
+// import { Button, Col, Container, Grid, Input, Row } from "@nextui-org/react";
+import { useState } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+import { createChatBot } from '../../api/chatbot'
 
 function ChatBotCreate() {
-  const [name, setName] = useState("");
-  const queryClient = useQueryClient();
+  const [name, setName] = useState('')
+  const queryClient = useQueryClient()
   const mutation = useMutation((botName: string) => createChatBot(botName), {
     onSuccess: () => {
-      queryClient.invalidateQueries("bots");
+      queryClient.invalidateQueries('bots')
     },
-  });
+  })
 
   return (
     <>
-      <Container>
+      {/* <Container>
         <Row gap={2}>
           <Col>
             <Input
@@ -31,9 +31,9 @@ function ChatBotCreate() {
             <Button onClick={() => mutation.mutate(name)}>Create</Button>
           </Col>
         </Row>
-      </Container>
+      </Container> */}
     </>
-  );
+  )
 }
 
-export default ChatBotCreate;
+export default ChatBotCreate
