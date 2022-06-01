@@ -70,7 +70,7 @@ You can access the REST API of the server at `http://localhost:3030` using the f
 
 - `/api/chatbots/`: Create a new chatbot
   - Body:
-    - `name: String` (default: Steve): The name of the chatbot
+    - `name: String` : The name of the chatbot
 
 ### `PATCH`
 
