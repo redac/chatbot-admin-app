@@ -15,3 +15,12 @@ model Bot {
   discord   Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+// In order to identify a user we need to use somethig like discord where we add a tag of 4 digits
+// To the end of username. For example redac#2342
+model Store {
+  username    String
+  tag         Int
+  preferences String // Stringified JSON object
+  @@unique([username, tag])
+}

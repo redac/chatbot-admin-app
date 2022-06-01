@@ -31,10 +31,10 @@ npm install
 
 ### 2. Initialize the database
 
-Run the following command to initialize your SQLite database file and the prisma client. This also creates the `Bot` table that is defined in [`prisma/schema.prisma`](./server/prisma/schema.prisma):
+Run the following command to create your SQLite database file. This also creates the `Bot` table that is defined in [`prisma/schema.prisma`](./server/prisma/schema.prisma):
 
 ```
-cd server && npx prisma generate
+npx prisma migrate dev --name init
 ```
 
 ### 3. Launch the application

@@ -5,7 +5,8 @@ const cors = require('cors');
 const RiveScript = require('rivescript');
 
 const { data, INIT_PORT } = require('../utils/data');
-const { prisma } = require('../utils/db');
+
+const prisma = require('./prisma')
 
 /**
  * Log an error when file loading fails
@@ -52,7 +53,7 @@ function notify_error(res, message) {
  * @param {String} name
  * @returns
  */
-async function addChatbot(name, next) {
+async function addChatbot(name) {
   const bot = {
     info: {
       name: name,
@@ -61,18 +62,21 @@ async function addChatbot(name, next) {
     webObj: null,
     discordObj: null,
   };
-  // Add Bot to DB
+  //Add Bot to DB
   try {
     const createdBot = await prisma.bot.create({
       data: {
         name: bot.info.name,
       },
     });
+    
     data.chatbots[createdBot.bot_id] = _mapDbBotToLocalBot(createdBot);
     return [createdBot.bot_id, createdBot];
   } catch (error) {
-    next(error);
+    console.log(error)
+    throw error
   }
+
 }
 
 function _mapDbBotToLocalBot(dbBot) {
@@ -156,6 +160,7 @@ async function botService(id) {
   bots[id].info.web = true;
 }
 
+
 module.exports = {
   loading_error,
   notify,
@@ -163,5 +168,5 @@ module.exports = {
   _mapDbBotToLocalBot,
   addChatbot,
   addBrain,
-  botService,
+  botService
 };

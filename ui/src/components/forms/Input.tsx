@@ -1,6 +1,7 @@
 interface InputProps {
   label: string
-  onChange?: React.ChangeEventHandler | undefined
+  value?: string | undefined
+  onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined
 }
 
 export default function Input(props: InputProps) {
@@ -10,6 +11,7 @@ export default function Input(props: InputProps) {
       <input
         className='col-span-5 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md'
         type='text'
+        value={props.value}
         onChange={props.onChange}
       />
     </div>

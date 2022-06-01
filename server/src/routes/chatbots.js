@@ -1,12 +1,12 @@
 const express = require('express');
 
 const { data } = require('../utils/data');
-const { prisma } = require('../utils/db');
+const prisma = require('../utils/prisma');
 const {
   _mapDbBotToLocalBot,
   addBrain,
   addChatbot,
-  botService,
+  botService
 } = require('../utils/util');
 
 const INIT_PORT = 4001;
@@ -61,11 +61,12 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const { name } = req.body;
-    const [id, createdBot] = await addChatbot(name, next);
-    addBrain(id, 'rs-standard');
+    const [id, createdBot] = await addChatbot(name);
+    addBrain(id, 'eliza');
     botService(id);
     res.json(createdBot);
   } catch (error) {
+    console.log(error)
     next(error);
   }
 });

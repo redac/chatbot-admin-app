@@ -5,9 +5,11 @@ interface SelectOptionType {
 
 interface ListProps {
   label: string
-  options: SelectOptionType[]
+  options?: string[] | undefined
   name: string
   id: string
+  value?: string | undefined
+  onChange?: React.ChangeEventHandler<HTMLSelectElement> | undefined
 }
 
 export default function Select(props: ListProps) {
@@ -20,10 +22,10 @@ export default function Select(props: ListProps) {
         className='col-span-5 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm border-gray-300 rounded-md'
         name={props.name}
         id={props.id}
+        value={props.value}
+        onChange={props.onChange}
       >
-        {props.options.map((item) => (
-          <option value={item.value}>{item.label}</option>
-        ))}
+        {props.options && props.options.map((item) => <option value={item}>{item}</option>)}
       </select>
     </div>
   )

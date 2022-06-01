@@ -1,16 +1,21 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { DotsHorizontalIcon, AdjustmentsIcon, TrashIcon } from '@heroicons/react/outline'
+import { DotsHorizontalIcon, AdjustmentsIcon, TrashIcon, ChatAlt2Icon } from '@heroicons/react/outline'
 
 // @ts-ignore
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function ChatBotSetting() {
+interface ChatbotSettingProps {
+  onChatClick?: () => void | undefined
+  onUpdateClick?: () => void | undefined
+  onDeleteClick?: () => void | undefined
+}
+
+export default function ChatBotSetting(props: ChatbotSettingProps) {
   return (
-    <Menu as='div' className='relative inline-block text-left'>
+    <Menu as='div' className='inline-block text-left '>
       <div>
         <Menu.Button>
           <DotsHorizontalIcon className='w-6 h-6 text-gray-500'></DotsHorizontalIcon>
@@ -26,12 +31,26 @@ export default function ChatBotSetting() {
         leaveFrom='transform opacity-100 scale-100'
         leaveTo='transform opacity-0 scale-95'
       >
-        <Menu.Items className='absolute right-0 z-20 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+        <Menu.Items className='absolute z-50 w-48 origin-top-right bg-white rounded-md shadow-lg right-[12rem] ring-1 ring-black ring-opacity-5 focus:outline-none'>
           <div className='py-1'>
             <Menu.Item>
               {({ active }) => (
                 <a
-                  href='/update'
+                  onClick={props.onChatClick}
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'content-center inline-flex w-full px-4 py-2 ',
+                  )}
+                >
+                  <ChatAlt2Icon className='w-5 h-5 mr-2' />
+                  <span>Chat</span>
+                </a>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <a
+                  onClick={props.onUpdateClick}
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'content-center inline-flex w-full px-4 py-2 ',
@@ -46,8 +65,9 @@ export default function ChatBotSetting() {
               {({ active }) => (
                 <a
                   href='#'
+                  onClick={props.onDeleteClick}
                   className={classNames(
-                    active ? 'bg-gray-100 text-red-800' : 'text-red-500',
+                    active ? 'bg-gray-100 text-red-600' : 'text-red-500',
                     'content-center inline-flex w-full px-4 py-2',
                   )}
                 >

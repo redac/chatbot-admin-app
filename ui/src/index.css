@@ -4,11 +4,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* html {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
-} */
-
 html {
-  font-size: 0.85rem;
+  font-size: 0.80rem;
+}
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 10vh;
+    background: #ffffff;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #c4bebe;
+    border-radius: 10vh;
+    border: 3px solid #ffffff;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #a19d9d;
+  }
 }

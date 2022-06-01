@@ -1,7 +1,8 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
+import { useMutation, useQueryClient } from 'react-query'
+import { createChatBot } from '../../api/chatbot'
 
 interface CreateChatbotModalProps {
   isOpen: boolean
@@ -10,6 +11,15 @@ interface CreateChatbotModalProps {
 
 export default function CreateChatbotModal(props: CreateChatbotModalProps) {
   const cancelButtonRef = useRef(null)
+  const [botName, setBotName] = useState('')
+
+  const mutation = useMutation((name: string) => createChatBot(name))
+  const client = useQueryClient()
+  const onSave = () => {
+    props.setIsOpen(false)
+    mutation.mutate(botName, { onSuccess: () => client.invalidateQueries('bots') })
+  }
+
   return (
     <Transition.Root show={props.isOpen} as={Fragment}>
       <Dialog
@@ -58,9 +68,10 @@ export default function CreateChatbotModal(props: CreateChatbotModalProps) {
                       <div className='col-span-6 sm:col-span-4'>
                         <input
                           type='text'
-                          name='email-address'
-                          id='email-address'
+                          name='bot-name'
+                          id='bot-name'
                           placeholder='Name'
+                          onChange={(e) => setBotName(e.target.value)}
                           className='block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500'
                         />
                       </div>
@@ -71,8 +82,8 @@ export default function CreateChatbotModal(props: CreateChatbotModalProps) {
               <div className='px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse'>
                 <button
                   type='button'
-                  className='inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-700 border border-transparent rounded-md shadow-sm shadow-blue-500/50 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto'
-                  onClick={() => props.setIsOpen(false)}
+                  className='inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-blue-500 border border-transparent rounded-md shadow-sm shadow-blue-500/50 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto'
+                  onClick={onSave}
                 >
                   Create
                 </button>

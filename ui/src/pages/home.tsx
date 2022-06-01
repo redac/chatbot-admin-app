@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { getAllChatBots } from '../api/chatbot'
 import { CreateChatbotModal, ChatbotList } from '../components/core'
-import { Card } from '../components/shared'
 import { PageLayout } from './_layout'
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false)
-  const { data, status } = useQuery("bots", getAllChatBots)
+  const { data, status } = useQuery('bots', getAllChatBots)
   return (
-    <PageLayout title={'Chatbots'}>
+    <PageLayout title={'Chatbot Admin Panel'}>
       <div className='grid place-items-end'>
         <button
           onClick={() => setIsOpen(true)}
