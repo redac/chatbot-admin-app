@@ -34,3 +34,4 @@ experimental/**/*.db
 .nuxt
 dev.db
 *.env*
+config.json

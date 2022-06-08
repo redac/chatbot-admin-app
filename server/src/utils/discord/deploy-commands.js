@@ -49,7 +49,6 @@ const commands = [
 
 function deployDiscordCommands() {
   const rest = new REST({ version: '9' }).setToken(token);
-  console.log(`Choices: ${commands[2].options.choices}`);
   rest
     .put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
     .then(() =>
