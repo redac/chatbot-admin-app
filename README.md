@@ -12,8 +12,6 @@ Tech stack:
 - Backend: [Express](https://expressjs.com/), [Prisma ORM](https://www.prisma.io/express)
 - Frontend: [React](https://reactjs.org/), [TailwindCSS](https://tailwindcss.com/)
 
-You can see a hosted version of application on <a href="#" target="_blank">Vercel</a>.
-
 ## Getting started
 
 ### 1. Clone the repo and install the dependencies
