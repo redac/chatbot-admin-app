@@ -17,7 +17,7 @@ const services = ['brains', 'chatbots', 'interfaces'];
 
 /**
  * Launch all API "services" : routers in the routes directory
- * Current services: chatbots, brains and interfaces
+ * Current services: brains, chatbots, interfaces
  */
 services.forEach((service) => {
   appAdmin.use('/api/' + service, require('./src/routes/' + service));
