@@ -1,8 +1,8 @@
 {
   "name": "chatbot-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Create, Read, Update and Delete rivescript chatbots.",
+  "homepage": "https://github.com/redac/chatbot-admin-app",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "front-dev": "npm run dev --workspace=ui",
@@ -10,8 +10,12 @@
     "dev": "concurrently npm:*-dev",
     "debug": "nodemon --inspect server/start.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Reda Khermach, Kellian Germain",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/redac/chatbot-admin-app"
+  },
+  "license": "GPL-2.0",
   "workspaces": [
     "./server",
     "./ui"
