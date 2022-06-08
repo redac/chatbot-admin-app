@@ -2,9 +2,6 @@ const prisma = require('./prisma')
 const { data, INIT_PORT } = require('./data');
 const { addBrain, botService } = require('./util');
 
-const { customAlphabet } = require('nanoid')
-const nanoid = customAlphabet('1234567890', 10)
-
 /**
  * Create chatbot objects from information stored in the DB
  */
@@ -21,10 +18,6 @@ async function initDB() {
       discordObj: null,
     };
   });
-}
-
-function generateRandomTag() {
-  return nanoid().substring(6, 10)
 }
 
 module.exports = { initDB };

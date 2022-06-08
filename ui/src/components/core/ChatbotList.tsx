@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast'
 import { useMutation, useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { deleteChatbot } from '../../api/chatbot'
@@ -56,14 +57,15 @@ function ChatbotList(props: ChatbotListProps) {
                       <ChatbotIntegrationStatus status={item.discord === true} />
                     </td>
                     <td className='p-4'>
-                      <ChatBotSetting
+                      <ChatBotSetting showChatButton={item.web}
                         onChatClick={() => navigate('/playground', { state: item })}
                         onUpdateClick={() => navigate('/update', { state: item })}
-                        onDeleteClick={() =>
+                        onDeleteClick={() => {
                           deleteChatbotMutation.mutate(item.bot_id, {
                             onSuccess: () => client.invalidateQueries('bots'),
                           })
-                        }
+                          toast.success('Chatbot "' + item.name + '" deleted!')
+                        }}
                       />
                     </td>
                   </tr>

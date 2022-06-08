@@ -18,7 +18,7 @@ const pageVariants = {
   },
 }
 
-export function PageLayout(props: PageLayoutProps) {
+export function  PageLayout(props: PageLayoutProps) {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   return (
@@ -26,8 +26,8 @@ export function PageLayout(props: PageLayoutProps) {
       <div className='container mx-auto'>
         <div className='flex flex-row items-center h-20 my-12'>
           {pathname !== '/' && (
-            <button onClick={() => navigate(-1)}>
-              <ArrowLeftIcon className='w-14 h-14 mr-8 text-slate-900 font-display'></ArrowLeftIcon>
+            <button onClick={() => navigate('/')}>
+              <ArrowLeftIcon className='mr-8 w-14 h-14 text-slate-900 font-display'></ArrowLeftIcon>
             </button>
           )}
           {typeof props.title === 'string' ? (

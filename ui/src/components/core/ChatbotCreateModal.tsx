@@ -3,6 +3,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 import { useMutation, useQueryClient } from 'react-query'
 import { createChatBot } from '../../api/chatbot'
+import { toast } from 'react-hot-toast';
 
 interface CreateChatbotModalProps {
   isOpen: boolean
@@ -18,6 +19,8 @@ export default function CreateChatbotModal(props: CreateChatbotModalProps) {
   const onSave = () => {
     props.setIsOpen(false)
     mutation.mutate(botName, { onSuccess: () => client.invalidateQueries('bots') })
+    if (botName.length == 0) toast.success('Chatbot created!');
+    else toast.success('Chatbot "' + (botName || null) + '" created!');
   }
 
   return (

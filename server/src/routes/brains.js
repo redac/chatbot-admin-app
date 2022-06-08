@@ -1,19 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const path = require('path');
-let brains = (global.brains = []);
+const { data } = require('../utils/data');
 
-// Stores rive files name in the brains array
+// Store rive files name in the brains array
 fs.readdir('src/public/brains', (_err, files) => {
   files.forEach((file) => {
-    brains.push(file.split('.')[0]);
+    data.brains.push(file.split('.')[0]);
   });
 });
 
-// route for user logout
+/**
+ * GET
+ * /api/brains
+ * List currently loaded brain files
+ */
 router.get('/', (_req, res) => {
-  res.send(global.brains);
+  res.send(data.brains);
 });
 
 module.exports = router;

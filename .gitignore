@@ -32,4 +32,5 @@ experimental/**/*.db
 .next
 .vscode/
 .nuxt
+dev.db
 *.env*

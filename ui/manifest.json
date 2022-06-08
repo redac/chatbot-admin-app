@@ -1,0 +1,26 @@
+{
+  "name": "Chatbot Admin App",
+  "short_name": "Chatbot Admin",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f2f2f2",
+  "icons": [
+    {
+      "src": "img/favicon/favicon.ico",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "img/favicon/apple-touch-icon.png",
+      "type": "image/png"
+    },
+    {
+      "src": "img/favicon/android-chrome-512x512.png",
+      "type": "image/png"
+    },
+    {
+      "src": "img/favicon/android-chrome-192x192.png",
+      "type": "image/png"
+    }
+  ],
+  "description": "Create, Read, Update & Delete rivescript chatbots."
+}

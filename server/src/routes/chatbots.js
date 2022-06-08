@@ -9,10 +9,9 @@ const {
   botService
 } = require('../utils/util');
 
-const INIT_PORT = 4001;
 const router = express.Router();
 
-// chatbots API Endpoints
+// Chatbots API Endpoints
 
 /**
  * GET
@@ -45,6 +44,7 @@ router.get('/:id', async (req, res, next) => {
     if (bot) {
       res.json(bot);
     } else {
+      res.status(204);
       res.json('Chatbot not found ! 🤖');
     }
   } catch (error) {
@@ -80,6 +80,7 @@ router.patch('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const botBody = req.body;
+
     const updatedBot = await prisma.bot.update({
       where: {
         bot_id: Number(id),

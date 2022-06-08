@@ -8,13 +8,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@discordjs/rest": "^0.5.0",
     "@prisma/client": "^3.14.0",
+    "axios": "^0.27.2",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "discord.js": "^13.7.0",
-    "dotenv": "^8.0.0",
     "express": "^4.17.1",
-    "nanoid": "^3.3.4",
     "prisma": "^3.14.0",
     "rivescript": "^2.0.0",
     "server": "^0.0.0",

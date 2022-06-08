@@ -1,4 +1,3 @@
-// Utility functions
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -6,7 +5,7 @@ const RiveScript = require('rivescript');
 
 const { data, INIT_PORT } = require('../utils/data');
 
-const prisma = require('./prisma')
+const prisma = require('./prisma');
 
 /**
  * Log an error when file loading fails
@@ -49,48 +48,58 @@ function notify_error(res, message) {
 // Bot related utility functions
 
 /**
- * Add a chatbot to the DB and create its object
- * @param {String} name
- * @returns
+ * Add a chatbot to the DB and create its local object
+ * @param {String} name The bot's name
+ * @returns {*} id, createdBot
  */
 async function addChatbot(name) {
   const bot = {
     info: {
-      name: name,
+      name: name || undefined,
     },
     rive: null,
     webObj: null,
     discordObj: null,
   };
-  //Add Bot to DB
+  // Add Bot info to DB
   try {
     const createdBot = await prisma.bot.create({
       data: {
         name: bot.info.name,
       },
     });
-    
+
     data.chatbots[createdBot.bot_id] = _mapDbBotToLocalBot(createdBot);
     return [createdBot.bot_id, createdBot];
   } catch (error) {
-    console.log(error)
-    throw error
+    console.log(error);
+    throw error;
   }
-
 }
 
+/**
+ * Create a local bot object from db info
+ * @param {*} dbBot The database bot object; contains info only
+ * @returns
+ */
 function _mapDbBotToLocalBot(dbBot) {
   return {
     info: {
       ...dbBot,
       url: 'http://localhost:' + (INIT_PORT + dbBot.bot_id),
     },
-    rive: null,
+    rive: addBrain(dbBot.bot_id, dbBot.brain),
     webObj: null,
     discordObj: null,
   };
 }
 
+/**
+ * Tie a brain file to a rivescript object
+ * @param {*} id The bot's id
+ * @param {*} brain The name of the brain file; has to be in src/public/brains
+ * @returns
+ */
 async function addBrain(id, brain) {
   let rive = new RiveScript({
     utf8: true,
@@ -105,15 +114,17 @@ async function addBrain(id, brain) {
       rive.sortReplies();
       data.chatbots[id].info.brain = brain;
       data.chatbots[id].rive = rive;
-      console.log('Brain file "' + brain + '.rive" loaded for chatbot ' + id);
+      console.log(
+        `Brain loaded: '${brain}.rive' for chatbot (${id} - ${data.chatbots[id].info.name})`
+      );
     })
     .catch(loading_error);
   return rive;
 }
 
 /**
- * Launches a bot's web service
- * @param {int} id
+ * Launch a bot's web service
+ * @param {int} id The bot's id
  */
 async function botService(id) {
   const appBot = express();
@@ -130,36 +141,40 @@ async function botService(id) {
   const bots = await data.chatbots;
 
   /**
-   * GET: display api help
+   * GET: display bot's api help
    */
-  appBot.get('/', (req, res) => {
+  appBot.get('/', (_req, res) => {
     const exampleJSON = {
+      _comment: 'Usage: Send a POST request with the following in its body',
       login: 'Reda',
       message: 'My name is Reda',
     };
-    res.send(
-      `<p>usage : send a POST request containing the login (a username) as well as the message you want to send to the chatbot </br> 
-    example: </p>` + JSON.stringify(exampleJSON)
-    );
+    res.status(200).json(exampleJSON);
   });
 
   /**
    * POST: Send message to chatbot
    */
   appBot.post('/', (req, res) => {
-    let { login, message } = req.body;
-    bots[id].rive.reply(login, message).then(function (reply) {
-      res.send({ name: bots[id].info.name, message: reply });
-    });
+    const { login, message } = req.body;
+    bots[id].rive
+      .reply(login, message)
+      .then(function (reply) {
+        res.send({ name: bots[id].info.name, message: reply });
+      })
+      .catch((err) => console.log(err));
   });
 
   // Save server to close it later if needed
   bots[id].webObj = appBot.listen(port, () => {
-    console.log('Chatbot ' + id + ' is listening on port ' + port + ' 🤖 ');
+    console.log(
+      `Chatbot (${id} - ${data.chatbots[id].info.name}) is listening on port ${port} 🤖`
+    );
   });
-  bots[id].info.web = true;
+  if (!bots[id].info.web) {
+    bots[id].webObj.close();
+  }
 }
-
 
 module.exports = {
   loading_error,
@@ -168,5 +183,5 @@ module.exports = {
   _mapDbBotToLocalBot,
   addChatbot,
   addBrain,
-  botService
+  botService,
 };

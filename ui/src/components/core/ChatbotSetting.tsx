@@ -11,6 +11,7 @@ interface ChatbotSettingProps {
   onChatClick?: () => void | undefined
   onUpdateClick?: () => void | undefined
   onDeleteClick?: () => void | undefined
+  showChatButton: boolean | undefined
 }
 
 export default function ChatBotSetting(props: ChatbotSettingProps) {
@@ -33,7 +34,7 @@ export default function ChatBotSetting(props: ChatbotSettingProps) {
       >
         <Menu.Items className='absolute z-50 w-48 origin-top-right bg-white rounded-md shadow-lg right-[12rem] ring-1 ring-black ring-opacity-5 focus:outline-none'>
           <div className='py-1'>
-            <Menu.Item>
+            {props.showChatButton && <Menu.Item>
               {({ active }) => (
                 <a
                   onClick={props.onChatClick}
@@ -46,7 +47,7 @@ export default function ChatBotSetting(props: ChatbotSettingProps) {
                   <span>Chat</span>
                 </a>
               )}
-            </Menu.Item>
+            </Menu.Item>}
             <Menu.Item>
               {({ active }) => (
                 <a
