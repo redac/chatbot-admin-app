@@ -1,6 +1,6 @@
-# Chatbot Administration CRUD App
+# Chatbot Admin Dashboard
 
-This is a chatbot administration web app, it allows users to:
+This is a chatbot admin dashboard. You can use it to:
 
 - **C**reate, **R**ead, **U**pdate and **D**elete rivescript chatbots.
 - Allow the user to choose an interface to communicate with the said bots.
